@@ -50,3 +50,44 @@ class RefreshToken(Base):
     is_active = Column(Boolean, server_default=text("TRUE"), nullable=False, default=True)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     rofl = Column(String(2048), nullable=True)
+
+
+class Buyer(Base):
+    __tablename__ = "buyers"
+
+    uuid = Column(
+        CHAR(36),
+        primary_key=True,
+        unique=True,
+        nullable=False,
+        default=lambda: str(uuid.uuid4()),
+    )
+    user_uuid = Column(CHAR(36), ForeignKey("users.uuid"), nullable=False, unique=True)
+    delivery_address = Column(String(256), nullable=False)
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+    updated_at = Column(DateTime(timezone=True), onupdate=func.now())
+    is_approved = Column(Boolean, server_default=text("FALSE"), nullable=False, default=False)
+
+    user = relationship("User", backref="buyer")
+
+
+class Farmer(Base):
+    __tablename__ = "farmers"
+
+    uuid = Column(
+        CHAR(36),
+        primary_key=True,
+        unique=True,
+        nullable=False,
+        default=lambda: str(uuid.uuid4()),
+    )
+    user_uuid = Column(CHAR(36), ForeignKey("users.uuid"), nullable=False, unique=True)
+    government_issued_id = Column(String(128), nullable=False)
+    farm_address = Column(String(256), nullable=False)
+    farm_size = Column(Float, nullable=True)
+    additional_info = Column(Text, nullable=True)
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+    updated_at = Column(DateTime(timezone=True), onupdate=func.now())
+    is_approved = Column(Boolean, server_default=text("FALSE"), nullable=False, default=False)
+
+    user = relationship("User", backref="farmer")

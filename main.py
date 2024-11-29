@@ -5,7 +5,7 @@ from loguru import logger
 from config import settings, Settings
 from database import db
 from domains.base_exception import BaseHTTPException
-from routers import user
+from routers import user, buyer, farmer
 from utils.handlers import base_http_exception_handler
 
 
@@ -34,6 +34,8 @@ app.add_exception_handler(BaseHTTPException, handler=base_http_exception_handler
 
 # Include routers
 app.include_router(user.router)
+app.include_router(buyer.router)
+app.include_router(farmer.router)
 
 @app.get("/health")
 async def health_check():
